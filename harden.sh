@@ -29,3 +29,22 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 log_success "Root privileges confirmed."
+
+# 2. SYSTEM UPDATE & UPGRADE
+echo "---------------------------------"
+echo "🔄 Starting System Update..."
+
+# Update package list (suppress output for cleanliness)
+apt update -y > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+    log_success "Package list updated."
+else
+    log_error "Failed to update package list."
+    exit 1
+fi
+
+# Upgrade installed packages
+# DEBIAN_FRONTEND=noninteractive prevents pop-ups asking for input
+DEBIAN_FRONTEND=noninteractive apt upgrade -y > /dev/null 2>&1
+log_success "System packages upgraded."
