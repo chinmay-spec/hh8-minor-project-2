@@ -48,3 +48,12 @@ fi
 # DEBIAN_FRONTEND=noninteractive prevents pop-ups asking for input
 DEBIAN_FRONTEND=noninteractive apt upgrade -y > /dev/null 2>&1
 log_success "System packages upgraded."
+
+# 3. SYSTEM CLEANUP
+echo "🧹 Removing unused packages..."
+
+# Autoremove deletes dependencies that are no longer needed
+apt autoremove -y > /dev/null 2>&1
+apt autoclean -y > /dev/null 2>&1
+
+log_success "System cleanup complete."
