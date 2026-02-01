@@ -86,3 +86,18 @@ log_success "Allowed SSH traffic."
 # We pipe 'echo y' because enabling UFW usually asks "Are you sure?"
 echo "y" | ufw enable > /dev/null 2>&1
 log_success "Firewall is now ACTIVE."
+
+# 5. SSH HARDENING
+echo "---------------------------------"
+echo "🔒 Securing SSH Configuration..."
+
+SSH_CONFIG="/etc/ssh/sshd_config"
+BACKUP_CONFIG="/etc/ssh/sshd_config.bak"
+
+# Create a backup if one doesn't exist
+if [ ! -f "$BACKUP_CONFIG" ]; then
+    cp "$SSH_CONFIG" "$BACKUP_CONFIG"
+    log_success "Backup created at $BACKUP_CONFIG"
+else
+    echo "Backup already exists. Skipping..."
+fi
