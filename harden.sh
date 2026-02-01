@@ -101,3 +101,11 @@ if [ ! -f "$BACKUP_CONFIG" ]; then
 else
     echo "Backup already exists. Skipping..."
 fi
+
+# Disable Root Login
+# We use 'sed' to find lines starting with PermitRootLogin (even if commented out)
+# and replace them with 'PermitRootLogin no'
+
+sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' "$SSH_CONFIG"
+
+log_success "Root login disabled in configuration."
