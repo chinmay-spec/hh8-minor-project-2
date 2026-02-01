@@ -78,3 +78,11 @@ ufw default allow outgoing > /dev/null 2>&1
 
 log_success "Default firewall policies set (Deny In / Allow Out)."
 
+# Allow SSH Port (Critical: Prevents Lockout)
+ufw allow ssh > /dev/null 2>&1
+log_success "Allowed SSH traffic."
+
+# Enable the Firewall
+# We pipe 'echo y' because enabling UFW usually asks "Are you sure?"
+echo "y" | ufw enable > /dev/null 2>&1
+log_success "Firewall is now ACTIVE."
