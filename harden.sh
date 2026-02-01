@@ -119,3 +119,13 @@ else
 fi
 
 log_success "SSH Service restarted. Changes applied."
+
+# 6. REMOVE DANGEROUS SOFTWARE
+echo "---------------------------------"
+echo "🧹 Reducing Attack Surface..."
+
+# List of packages to remove
+# Telnet is insecure; Netcat can be used for reverse shells
+BAD_PACKAGES="telnet netcat-openbsd netcat-traditional"
+
+echo "Targeting packages: $BAD_PACKAGES"
