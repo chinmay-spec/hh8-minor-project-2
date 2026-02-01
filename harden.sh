@@ -57,3 +57,14 @@ apt autoremove -y > /dev/null 2>&1
 apt autoclean -y > /dev/null 2>&1
 
 log_success "System cleanup complete."
+
+# 4. FIREWALL SETUP (UFW)
+echo "---------------------------------"
+echo "🛡️ Configuring Firewall..."
+
+# Check if UFW is installed; if not, install it.
+if ! command -v ufw &> /dev/null; then
+    echo "Installing UFW..."
+    apt install ufw -y > /dev/null 2>&1
+fi
+log_success "UFW is installed."
