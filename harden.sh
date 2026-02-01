@@ -109,3 +109,13 @@ fi
 sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' "$SSH_CONFIG"
 
 log_success "Root login disabled in configuration."
+
+# Restart SSH Service to apply changes
+# We try both 'sshd' and 'ssh' because service names vary by OS
+if systemctl list-units --full -all | grep -q "sshd.service"; then
+    systemctl restart sshd
+else
+    systemctl restart ssh
+fi
+
+log_success "SSH Service restarted. Changes applied."
