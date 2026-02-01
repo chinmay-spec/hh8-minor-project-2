@@ -129,3 +129,15 @@ echo "🧹 Reducing Attack Surface..."
 BAD_PACKAGES="telnet netcat-openbsd netcat-traditional"
 
 echo "Targeting packages: $BAD_PACKAGES"
+
+# Loop through the list and remove each package
+for pkg in $BAD_PACKAGES; do
+    # 'apt purge' removes the app AND its config files
+    # 2>/dev/null hides the error if the package wasn't installed anyway
+    apt purge -y "$pkg" > /dev/null 2>&1
+
+    # Log the action
+    echo " - Checked/Removed: $pkg"
+done
+
+log_success "Dangerous packages removed."
