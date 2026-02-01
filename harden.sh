@@ -141,3 +141,11 @@ for pkg in $BAD_PACKAGES; do
 done
 
 log_success "Dangerous packages removed."
+
+# Verify removal
+# We use 'dpkg -l' to list installed apps and grep for our bad ones
+if dpkg -l | grep -qE "telnet|netcat"; then
+    log_error "Warning: Some dangerous packages might still remain."
+else
+    log_success "Verification Passed: System is clean."
+fi
