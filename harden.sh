@@ -68,3 +68,13 @@ if ! command -v ufw &> /dev/null; then
     apt install ufw -y > /dev/null 2>&1
 fi
 log_success "UFW is installed."
+
+# Configure Default Rules
+# Deny all incoming connections (Security First)
+ufw default deny incoming > /dev/null 2>&1
+
+# Allow outgoing connections (So the server can run updates)
+ufw default allow outgoing > /dev/null 2>&1
+
+log_success "Default firewall policies set (Deny In / Allow Out)."
+
