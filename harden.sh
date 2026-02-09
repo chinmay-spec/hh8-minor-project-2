@@ -160,3 +160,16 @@ if ! command -v fail2ban-client &> /dev/null; then
     apt install fail2ban -y > /dev/null 2>&1
 fi
 log_success "Fail2Ban installed."
+
+# Create a safe configuration copy
+# We copy jail.conf to jail.local so our changes survive updates
+if [ ! -f /etc/fail2ban/jail.local ]; then
+    cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+    log_success "Created jail.local configuration."
+fi
+
+# Configure SSH Jail (Ban repeated failed login attempts)
+# We use 'sed' to ensure the SSH jail is enabled
+sed -i 's/^\[sshd\]/[sshd]\nenabled = true/' /etc/fail2ban/jail.local
+
+log_success "Configured SSH protection rules."
