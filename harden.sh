@@ -149,3 +149,14 @@ if dpkg -l | grep -qE "telnet|netcat"; then
 else
     log_success "Verification Passed: System is clean."
 fi
+
+# 7. INTRUSION PREVENTION (Fail2Ban)
+echo "---------------------------------"
+echo "🕵️  Setting up Intrusion Prevention (Fail2Ban)..."
+
+# Install Fail2Ban
+if ! command -v fail2ban-client &> /dev/null; then
+    echo "Installing Fail2Ban..."
+    apt install fail2ban -y > /dev/null 2>&1
+fi
+log_success "Fail2Ban installed."
