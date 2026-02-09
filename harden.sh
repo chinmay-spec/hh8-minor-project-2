@@ -173,3 +173,14 @@ fi
 sed -i 's/^\[sshd\]/[sshd]\nenabled = true/' /etc/fail2ban/jail.local
 
 log_success "Configured SSH protection rules."
+
+# Restart and Enable Fail2Ban Service
+systemctl restart fail2ban
+systemctl enable fail2ban > /dev/null 2>&1
+
+# Check status
+if systemctl is-active --quiet fail2ban; then
+    log_success "Fail2Ban is active and watching."
+else
+    log_error "Fail2Ban failed to start."
+fi
