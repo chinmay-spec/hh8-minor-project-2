@@ -184,3 +184,47 @@ if systemctl is-active --quiet fail2ban; then
 else
     log_error "Fail2Ban failed to start."
 fi
+
+# 8. NETWORK HARDENING (Disable IPv6)
+echo "---------------------------------"
+echo "🌐 Disabling unused protocols..."
+
+# Disable IPv6 to reduce attack surface
+# We write these settings to a config file so they persist after reboot
+CONF_FILE="/etc/sysctl.d/99-disable-ipv6.conf"
+if [ ! -f "$CONF_FILE" ]; then
+    echo "net.ipv6.conf.all.disable_ipv6 = 1" > "$CONF_FILE"
+    echo "net.ipv6.conf.default.disable_ipv6 = 1" >> "$CONF_FILE"
+    echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> "$CONF_FILE"
+    sysctl -p "$CONF_FILE" > /dev/null 2>&1
+    log_success "IPv6 disabled."
+else
+    echo "IPv6 already disabled."
+fi
+
+# 9. SECURITY AUDIT (Empty Passwords)
+echo "---------------------------------"
+echo "🕵️  Auditing User Accounts..."
+
+# Check for users with empty password fields in /etc/shadow
+EMPTY_PASS=$(awk -F: '($2 == "" ) { print $1 }' /etc/shadow)
+
+if [ -z "$EMPTY_PASS" ]; then
+    log_success "No users with empty passwords found."
+else
+    log_error "WARNING: The following users have no password: $EMPTY_PASS"
+    log_error "Please set a password for them immediately using 'passwd <user>'."
+fi
+
+# 10. FINAL SUMMARY
+echo "---------------------------------"
+echo "✅ HARDENING COMPLETE!"
+echo "Summary of actions:"
+echo " - System Updated"
+echo " - Firewall Configured"
+echo " - SSH Hardened"
+echo " - Dangerous Apps Removed"
+echo " - Fail2Ban Installed"
+echo " - Network Protocols Secured"
+echo "---------------------------------"
+echo "Please reboot your system to ensure all changes take effect."
